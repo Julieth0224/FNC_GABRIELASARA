@@ -50,44 +50,107 @@ def Tseitin(A, letrasProposicionalesA):
     letrasProposicionalesB = [chr(x) for x in range(256, 300)]
     assert(not bool(set(letrasProposicionalesA) & set(letrasProposicionalesB))), u"¡Hay letras proposicionales en común!"
 
-    # CODIGO AQUI
+    L = []
+    pila = []
+    count = -1
+    s = A[0]
 
-    return "OK"
+    while len(A) > 0:
+        if s in letrasProposicionalesA and pila[-1] == "-":
+            count += 1
+            atomo = letrasProposicionalesB[count]
+            pila = pila[:-1]
+            pila.append(atomo)
+            L.append(atomo + "=" + "-" + s)
+            A = A[0]
+            s = A[0]
+            if len(A) > 0:
+                s = A[0]
+        elif s == ")":
+            w = pila[-1]
+            O = pila[-2]
+            v = pila[-3]
+            pila = pila[:len(pila)-4]
+            count += 1
+            atomo = letrasProposicionalesB[count]
+            L.append(atomo + "=" + "(" + v + O + w + ")")
+            s = atomo
+        else:
+            pila.append(s)
+            A = A[1:]
+            if len(A) > 0:
+                s = A[0]
+    B = ''
+
+    if count < 0:
+        atomo = pila[-1]
+    else:
+        atomo = letrasProposicionalesB[count]
+
+    for x in L:
+        y = enFNC(x)
+        B += "Y" + y
+
+    B = atomo + B
+    return B
 
 # Subrutina Clausula para obtener lista de literales
 # Input: C (cadena) una clausula
 # Output: L (lista), lista de literales
 def Clausula(C):
 
-    # CODIGO AQUI
+    L = []
+    while len(C) > 0:
+        s = C[0]
+        if s == "V":
+            C = C[1:]
+        elif s == "-":
+            literal = s + C[1]
+            L.append(literal)
+            C = C[2:]
+        else:
+            L.append(s)
+            C = C[1:]
 
-    return "OK"
+    return L
 
 # Algoritmo para obtencion de forma clausal
 # Input: A (cadena) en notacion inorder en FNC
 # Output: L (lista), lista de listas de literales
 def formaClausal(A):
 
-    # CODIGO AQUI
+    L = []
+    count = 0
+    while len(A) > 0:
+        if count >= len(A):
+            L.append(Clausula(A))
+            A = []
+        else:
+            if A[count] is "Y":
+                L.append(Clausula(A[:count]))
+                A = A[count+1:]
+                count = 0
+            else:
+                count += 1
 
-    return "OK"
+    return L
 
-# Test enFNC()
+#Test enFNC()
 # Descomente el siguiente código y corra el presente archivo
-# formula = "p=(qYr)"
-# print(enFNC(formula)) # Debe obtener qO-pYrO-pY-qO-rOp
+#formula = "p=(qYr)"
+#print(enFNC(formula)) # Debe obtener qO-pYrO-pY-qO-rOp
 
 # Test Tseitin()
 # Descomente el siguiente código y corra el presente archivo
-# formula = "(pYq)"
-# print(Tseitin(formula)) # Debe obtener AYpO-AYqO-AY-pO-qOA (la A tiene una raya encima)
+#formula = "(pYq)"
+#print(Tseitin(formula, letrasProposicionalesA)) # Debe obtener AYpO-AYqO-AY-pO-qOA (la A tiene una raya encima)
 
 # Test Clausula()
 # Descomente el siguiente código y corra el presente archivo
-# c = "pO-qOr"
-# print(Clausula(c)) # Debe obtener ['p', '-q', 'r']
+#c = "pO-qOr"
+#print(Clausula(c)) # Debe obtener ['p', '-q', 'r']
 
 # Test formaClausal()
 # Descomente el siguiente código y corra el presente archivo
-# f = "pO-qOrY-sOt"
-# print(formaClausal(f)) # Debe obtener [['p', '-q', 'r'], ['-s', 't']]
+#f = "pO-qOrY-sOt"
+#print(formaClausal(f)) # Debe obtener [['p', '-q', 'r'], ['-s', 't']]
