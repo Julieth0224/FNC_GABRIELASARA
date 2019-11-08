@@ -63,7 +63,6 @@ def Tseitin(A, letrasProposicionalesA):
             pila.append(atomo)
             L.append(atomo + "=" + "-" + s)
             A = A[0]
-            s = A[0]
             if len(A) > 0:
                 s = A[0]
         elif s == ")":
@@ -102,7 +101,7 @@ def Clausula(C):
     L = []
     while len(C) > 0:
         s = C[0]
-        if s == "V":
+        if s == "O":
             C = C[1:]
         elif s == "-":
             literal = s + C[1]
@@ -135,6 +134,7 @@ def formaClausal(A):
 
     return L
 
+letrasProposicionalesA = ['p', 'q', 'r', 's', 't']
 #Test enFNC()
 # Descomente el siguiente código y corra el presente archivo
 #formula = "p=(qYr)"
@@ -142,15 +142,15 @@ def formaClausal(A):
 
 # Test Tseitin()
 # Descomente el siguiente código y corra el presente archivo
-#formula = "(pYq)"
-#print(Tseitin(formula, letrasProposicionalesA)) # Debe obtener AYpO-AYqO-AY-pO-qOA (la A tiene una raya encima)
+formula = "(pYq)"
+print(Tseitin(formula, letrasProposicionalesA)) # Debe obtener AYpO-AYqO-AY-pO-qOA (la A tiene una raya encima)
 
 # Test Clausula()
 # Descomente el siguiente código y corra el presente archivo
-#c = "pO-qOr"
-#print(Clausula(c)) # Debe obtener ['p', '-q', 'r']
+c = "pO-qOr"
+print(Clausula(c)) # Debe obtener ['p', '-q', 'r']
 
 # Test formaClausal()
 # Descomente el siguiente código y corra el presente archivo
-#f = "pO-qOrY-sOt"
-#print(formaClausal(f)) # Debe obtener [['p', '-q', 'r'], ['-s', 't']]
+f = "pO-qOrY-sOt"
+print(formaClausal(f)) # Debe obtener [['p', '-q', 'r'], ['-s', 't']]
